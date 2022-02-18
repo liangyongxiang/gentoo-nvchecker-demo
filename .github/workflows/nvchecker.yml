@@ -1,0 +1,22 @@
+name: CI
+
+on:
+  push:
+    branches: [ master ]
+
+  workflow_dispatch:
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v2
+        with:
+          repository: microcai/gentoo-zh
+      - name: get all package
+        id: packages
+        run: |
+          packages=$(find ./ | grep -E '.*/.*/.*ebuild$' | cut -c3- | xargs -I{} dirname {} | sort | uniq)
+          echo "${packages}"
+          echo "::set-output name=packages::${packages}"
